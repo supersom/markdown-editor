@@ -1,3 +1,8 @@
+:root {
+  --action-bar-h: 49px;
+  --status-bar-h: 36px;
+}
+
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
@@ -34,7 +39,7 @@ body {
 #action-bar button:hover { background: #f0f0f0; }
 
 /* Read mode */
-#read-pane { max-width: 800px; margin: 0 auto; padding: 48px 24px; }
+#read-pane { max-width: 800px; margin: 0 auto; padding: 48px 24px calc(var(--status-bar-h) + 24px); }
 #render-output h1,
 #edit-render-output h1 { font-size: 2em; margin-bottom: 0.5em; border-bottom: 1px solid #eee; padding-bottom: 0.2em; }
 #render-output h2,
@@ -64,7 +69,7 @@ body {
 #edit-pane { display: none; }
 #edit-pane:not([hidden]) {
   display: flex;
-  height: calc(100vh - 49px - 36px);
+  height: calc(100vh - var(--action-bar-h) - var(--status-bar-h));
 }
 #editor-left {
   display: flex;
@@ -72,6 +77,7 @@ body {
   flex: 1;
   border-right: 1px solid #e0e0e0;
   min-width: 0;
+  min-height: 0;
 }
 #editor-divider {
   width: 5px;
