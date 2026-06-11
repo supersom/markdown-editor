@@ -28,13 +28,13 @@
   <div id="edit-pane" hidden>
     <div id="editor-left">
       <div id="toolbar">
-        <button data-action="bold" title="Bold (Ctrl+B)"><strong>B</strong></button>
-        <button data-action="italic" title="Italic (Ctrl+I)"><em>I</em></button>
-        <button data-action="heading" title="Heading">H</button>
-        <button data-action="code" title="Inline code">&#96;</button>
-        <button data-action="link" title="Link">&#128279;</button>
-        <button data-action="bullet" title="Bullet list">&#8226;</button>
-        <button data-action="numbered" title="Numbered list">1.</button>
+        <button data-action="bold" title="Bold (Ctrl+B)" aria-label="Bold"><strong>B</strong></button>
+        <button data-action="italic" title="Italic (Ctrl+I)" aria-label="Italic"><em>I</em></button>
+        <button data-action="heading" title="Heading" aria-label="Heading">H</button>
+        <button data-action="code" title="Inline code" aria-label="Inline code">&#96;</button>
+        <button data-action="link" title="Link" aria-label="Insert link">&#128279;</button>
+        <button data-action="bullet" title="Bullet list" aria-label="Bullet list">&#8226;</button>
+        <button data-action="numbered" title="Numbered list" aria-label="Numbered list">1.</button>
       </div>
       <textarea id="editor-textarea" placeholder="Start writing here&#8230;"></textarea>
     </div>
@@ -44,9 +44,9 @@
     </div>
   </div>
 
-  <footer id="status-bar" hidden>
+  <div id="status-bar" role="status" aria-live="polite" hidden>
     <span>&#9679; Unsaved changes &#8212; stored locally in this browser. Use Save to keep them permanently.</span>
-  </footer>
+  </div>
 
   <script type="text/markdown" id="md-content"></script>
   <!-- BUILD:vendor -->
