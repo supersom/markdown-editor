@@ -12,3 +12,6 @@ test('renders link', () => {
 test('empty string returns empty string', () => {
   expect(Markdown.renderMarkdown('')).toBe('');
 });
+test('whitespace-only string returns empty string', () => {
+  expect(Markdown.renderMarkdown('   ')).toBe('');
+});
