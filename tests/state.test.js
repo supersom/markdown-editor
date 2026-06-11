@@ -38,3 +38,26 @@ test('setFileHandle stores handle', () => {
   State.setFileHandle(handle);
   expect(State.getFileHandle()).toBe(handle);
 });
+test('reset() restores all defaults after mutation', () => {
+  State.setMode('edit');
+  State.setContent('# Hello');
+  State.setDirty(true);
+  State.setDocumentName('notes.md');
+  State.setFileHandle({ name: 'notes.md' });
+  State.reset();
+  expect(State.getMode()).toBe('read');
+  expect(State.getContent()).toBe('');
+  expect(State.isDirty()).toBe(false);
+  expect(State.getDocumentName()).toBe('Untitled');
+  expect(State.getFileHandle()).toBeNull();
+});
+test('setDirty false clears dirty state', () => {
+  State.setDirty(true);
+  State.setDirty(false);
+  expect(State.isDirty()).toBe(false);
+});
+test('setFileHandle null clears handle', () => {
+  State.setFileHandle({ name: 'test.md' });
+  State.setFileHandle(null);
+  expect(State.getFileHandle()).toBeNull();
+});

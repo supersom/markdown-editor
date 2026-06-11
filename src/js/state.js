@@ -7,19 +7,22 @@ const State = (() => {
 
   return {
     reset() {
-      _mode = 'read'; _content = ''; _isDirty = false;
-      _documentName = 'Untitled'; _fileHandle = null;
+      _mode = 'read';
+      _content = '';
+      _isDirty = false;
+      _documentName = 'Untitled';
+      _fileHandle = null;
     },
     getMode() { return _mode; },
-    setMode(m) { _mode = m; },
+    setMode(mode) { _mode = mode; },
     getContent() { return _content; },
-    setContent(t) { _content = t; },
+    setContent(text) { _content = text; },
     isDirty() { return _isDirty; },
-    setDirty(d) { _isDirty = d; },
+    setDirty(dirty) { _isDirty = dirty; },
     getDocumentName() { return _documentName; },
-    setDocumentName(n) { _documentName = n; },
+    setDocumentName(name) { _documentName = name; },
     getFileHandle() { return _fileHandle; },
-    setFileHandle(h) { _fileHandle = h; },
+    setFileHandle(handle) { _fileHandle = handle; },
   };
 })();
 
