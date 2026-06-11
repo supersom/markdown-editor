@@ -1,0 +1,69 @@
+# Markdown Editor
+
+A single-file markdown editor and renderer. Open `dist/markdown-editor.html` in any browser — no install, no server, no account required.
+
+## What it does
+
+- **Read mode** (default): full-width rendered document, clean typography
+- **Edit mode**: split pane — raw markdown on the left, live preview on the right
+- **Toolbar**: Bold, Italic, Heading cycle, Inline code, Link, Bullet list, Numbered list
+- **Keyboard shortcuts**: Ctrl+B (bold), Ctrl+I (italic)
+- **Autosave**: writes to `localStorage` on every keystroke (debounced 500ms) as crash recovery
+- **beforeunload guard**: warns before closing a tab with unsaved changes
+- **Recovery prompt**: on reopen, offers to restore the previous unsaved session
+
+## Saving
+
+| Button | What it does |
+|---|---|
+| Save in this HTML | Embeds your markdown into the HTML file itself — one self-contained shareable document |
+| Save as separate document | Saves just the `.md` content alongside the HTML app |
+
+Both use the [File System Access API](https://developer.mozilla.org/en-US/docs/Web/API/File_System_API) on Chrome/Edge (native OS dialog, writes in place). Firefox/Safari fall back to a file download.
+
+## Opening a file
+
+Click **Open MD file** to load any `.md` file. On Chrome/Edge the app retains a write handle so "Save as separate document" updates the file in place without a dialog.
+
+## Build
+
+```bash
+npm install
+node build.js
+# → dist/markdown-editor.html (~54KB)
+```
+
+The build script inlines `marked.js` (markdown parser), all CSS, and all app JS into a single HTML file.
+
+## Test
+
+```bash
+npm test
+# 50 tests, 6 suites
+```
+
+## Architecture
+
+Source is split into focused modules concatenated by `build.js`:
+
+| Module | Responsibility |
+|---|---|
+| `src/js/state.js` | Singleton app state — mode, content, dirty flag, file handle, document name |
+| `src/js/markdown.js` | Thin wrapper around `marked.parse` |
+| `src/js/storage.js` | localStorage autosave and crash recovery |
+| `src/js/toolbar.js` | Pure text-manipulation functions operating on a textarea element |
+| `src/js/file-ops.js` | All file I/O — FSA open/save and download fallbacks |
+| `src/js/ui.js` | All DOM reads/writes and mode switching |
+| `src/js/main.js` | App init and event wiring |
+
+## Bugs caught during code review
+
+These were found by the spec and quality review passes during development — worth keeping for context:
+
+| Bug | Where | Fix |
+|---|---|---|
+| `$` in markdown content silently corrupted the saved HTML | `file-ops.js: buildHtmlString` | Switched from string replacement to a replacer function to bypass `$`-escape interpretation |
+| Dragging the pane divider past 20%/80% bounds froze the pane width | `ui.js: initDivider` | Changed `if (pct > 20 && pct < 80)` to `Math.max(20, Math.min(80, pct))` applied unconditionally |
+| Textarea wouldn't fill its container in flex column on some browsers | `style.css: #editor-left` | Added `min-height: 0` |
+| Last paragraph in read mode hidden behind fixed status bar | `style.css: #read-pane` | Added `padding-bottom: calc(var(--status-bar-h) + 24px)` |
+| `reset()` in state module not tested as a round-trip | `state.js` + `state.test.js` | Added mutation-then-reset test; now 13 state tests |
