@@ -37,3 +37,11 @@ test('buildHtmlString escapes </script> in content', () => {
   );
   expect(html).not.toMatch(/<\/script>bad/);
 });
+
+test('buildHtmlString handles $ signs in content without corruption', () => {
+  const html = FileOps.buildHtmlString(
+    '<html><body><script type="text/markdown" id="md-content"></script></body></html>',
+    'Price: $100 & $200'
+  );
+  expect(html).toContain('Price: $100 & $200');
+});

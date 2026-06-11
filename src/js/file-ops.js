@@ -11,7 +11,7 @@ const FileOps = (() => {
     const escaped = content.replace(/<\/script>/gi, '<\\/script>');
     const updated = outerHtml.replace(
       /(<script[^>]+id="md-content"[^>]*>)([\s\S]*?)(<\/script>)/,
-      '$1' + escaped + '$3'
+      (_, open, _inner, close) => open + escaped + close
     );
     return '<!DOCTYPE html>\n' + updated;
   }
