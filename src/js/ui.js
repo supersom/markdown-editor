@@ -44,7 +44,9 @@ const UI = (() => {
         if (!dragging) return;
         const rect = pane.getBoundingClientRect();
         const pct = ((e.clientX - rect.left) / rect.width) * 100;
-        if (pct > 20 && pct < 80) { left.style.flex = 'none'; left.style.width = pct + '%'; }
+        const clamped = Math.max(20, Math.min(80, pct));
+        left.style.flex = 'none';
+        left.style.width = clamped + '%';
       });
       document.addEventListener('mouseup', () => { dragging = false; pane.classList.remove('dragging'); });
     },
