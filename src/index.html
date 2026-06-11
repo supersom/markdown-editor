@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Markdown Editor</title>
+  <!-- BUILD:css -->
+</head>
+<body>
+  <header id="action-bar">
+    <div class="action-left">
+      <button id="btn-open">Open MD file</button>
+    </div>
+    <div class="action-center">
+      <span id="doc-name">Untitled</span>
+      <button id="btn-save-html">Save in this HTML</button>
+      <button id="btn-save-md">Save as separate document</button>
+    </div>
+    <div class="action-right">
+      <button id="btn-toggle-mode">Edit</button>
+    </div>
+  </header>
+
+  <main id="read-pane">
+    <article id="render-output"></article>
+  </main>
+
+  <div id="edit-pane" hidden>
+    <div id="editor-left">
+      <div id="toolbar">
+        <button data-action="bold" title="Bold (Ctrl+B)"><strong>B</strong></button>
+        <button data-action="italic" title="Italic (Ctrl+I)"><em>I</em></button>
+        <button data-action="heading" title="Heading">H</button>
+        <button data-action="code" title="Inline code">&#96;</button>
+        <button data-action="link" title="Link">&#128279;</button>
+        <button data-action="bullet" title="Bullet list">&#8226;</button>
+        <button data-action="numbered" title="Numbered list">1.</button>
+      </div>
+      <textarea id="editor-textarea" placeholder="Start writing here&#8230;"></textarea>
+    </div>
+    <div id="editor-divider" title="Drag to resize"></div>
+    <div id="editor-right">
+      <article id="edit-render-output"></article>
+    </div>
+  </div>
+
+  <footer id="status-bar" hidden>
+    <span>&#9679; Unsaved changes &#8212; stored locally in this browser. Use Save to keep them permanently.</span>
+  </footer>
+
+  <script type="text/markdown" id="md-content"></script>
+  <!-- BUILD:vendor -->
+  <!-- BUILD:js -->
+</body>
+</html>
