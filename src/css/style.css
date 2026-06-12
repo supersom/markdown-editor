@@ -101,7 +101,7 @@ body {
 }
 #editor-divider:hover, #edit-pane.dragging #editor-divider { background: #aaa; }
 #edit-pane.dragging { user-select: none; }
-#editor-right { flex: 1; overflow-y: auto; padding: 24px; min-width: 0; }
+#editor-right { flex: 1; overflow-y: auto; padding: 24px 24px calc(var(--status-bar-h) + 24px); min-width: 0; }
 
 /* Toolbar */
 #toolbar {
@@ -126,7 +126,7 @@ body {
 /* Textarea */
 #editor-textarea {
   flex: 1;
-  padding: 24px;
+  padding: 24px 24px calc(var(--status-bar-h) + 24px);
   border: none;
   outline: none;
   resize: none;
