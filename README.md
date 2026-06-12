@@ -18,17 +18,17 @@ A single-file markdown editor and renderer — no install, no server, no account
 
 | Button | When visible | What it does |
 |---|---|---|
-| Save in this HTML | Always | Embeds your markdown into the HTML file itself — one self-contained shareable document |
+| Save as html | Always | Embeds your markdown into the HTML file itself — one self-contained shareable document |
 | Save | After opening an `.md` file (Chrome/Edge only) | Writes back to the opened file in place — no dialog |
-| Save as separate document | Always | Opens a file dialog; if a file is already open its name is pre-suggested |
+| Save as doc (.md) | Always | Opens a file dialog; if a file is already open its name is pre-suggested |
 
-**Save in this HTML** and **Save as separate document** use the [File System Access API](https://developer.mozilla.org/en-US/docs/Web/API/File_System_API) on Chrome/Edge (native OS dialog). Firefox/Safari fall back to a file download.
+**Save as html** and **Save as doc (.md)** use the [File System Access API](https://developer.mozilla.org/en-US/docs/Web/API/File_System_API) on Chrome/Edge (native OS dialog). Firefox/Safari fall back to a file download.
 
-**Save** (in-place) is only available on Chrome/Edge where a write handle can be retained after opening a file. On Firefox/Safari it does not appear; use **Save as separate document** instead.
+**Save** (in-place) is only available on Chrome/Edge where a write handle can be retained after opening a file. On Firefox/Safari it does not appear; use **Save as doc (.md)** instead.
 
 ## Opening a file
 
-Click **Open MD file** to load any `.md` file. The file opens in read mode. On Chrome/Edge the app retains a write handle, and the **Save** button appears for subsequent in-place saves.
+Click **Open a doc (.md)** to load any `.md` file. The file opens in read mode. On Chrome/Edge the app retains a write handle, and the **Save** button appears for subsequent in-place saves.
 
 ## Build
 
