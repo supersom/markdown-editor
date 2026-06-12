@@ -6,6 +6,9 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   font-size: 16px;
   line-height: 1.6;
@@ -39,7 +42,16 @@ body {
 #action-bar button:hover { background: #f0f0f0; }
 
 /* Read mode */
-#read-pane { max-width: 800px; margin: 0 auto; padding: 48px 24px calc(var(--status-bar-h) + 24px); }
+#read-pane {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+}
+#render-output {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 48px 24px calc(var(--status-bar-h) + 24px);
+}
 #render-output h1,
 #edit-render-output h1 { font-size: 2em; margin-bottom: 0.5em; border-bottom: 1px solid #eee; padding-bottom: 0.2em; }
 #render-output h2,
@@ -69,7 +81,8 @@ body {
 #edit-pane { display: none; }
 #edit-pane:not([hidden]) {
   display: flex;
-  height: calc(100vh - var(--action-bar-h) - var(--status-bar-h));
+  flex: 1;
+  min-height: 0;
 }
 #editor-left {
   display: flex;
