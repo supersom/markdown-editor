@@ -34,6 +34,21 @@ test('setEditRenderOutput sets innerHTML', () => {
   UI.setEditRenderOutput('<p>Hi</p>');
   expect(document.getElementById('edit-render-output').innerHTML).toBe('<p>Hi</p>');
 });
+test('rendered content links open in a new tab', () => {
+  UI.setRenderOutput('<p><a href="https://example.com">x</a></p>');
+  const a = document.querySelector('#render-output a');
+  expect(a.target).toBe('_blank');
+  expect(a.rel).toBe('noopener noreferrer');
+});
+test('edit-preview content links open in a new tab', () => {
+  UI.setEditRenderOutput('<p><a href="/notes.md">x</a></p>');
+  const a = document.querySelector('#edit-render-output a');
+  expect(a.target).toBe('_blank');
+});
+test('same-page anchor links are left in place', () => {
+  UI.setRenderOutput('<p><a href="#section">x</a></p>');
+  expect(document.querySelector('#render-output a').target).toBe('');
+});
 test('getEmbeddedContent reads md-content', () => {
   document.getElementById('md-content').textContent = '# Hello';
   expect(UI.getEmbeddedContent()).toBe('# Hello');

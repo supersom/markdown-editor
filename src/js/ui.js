@@ -1,10 +1,21 @@
 const UI = (() => {
+  function renderInto(id, html) {
+    const el = document.getElementById(id);
+    el.innerHTML = html;
+    // Open content links in a new tab so following one never unloads the
+    // editor/reader (and its unsaved changes). Same-page #anchors don't
+    // navigate away, so they're left to scroll in place.
+    el.querySelectorAll('a[href]:not([href^="#"])').forEach((a) => {
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+    });
+  }
   return {
     setRenderOutput(html) {
-      document.getElementById('render-output').innerHTML = html;
+      renderInto('render-output', html);
     },
     setEditRenderOutput(html) {
-      document.getElementById('edit-render-output').innerHTML = html;
+      renderInto('edit-render-output', html);
     },
     getEmbeddedContent() {
       return document.getElementById('md-content').textContent;
