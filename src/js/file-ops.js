@@ -7,13 +7,38 @@ const FileOps = (() => {
     return new Blob([content], { type: 'text/markdown' });
   }
 
+  // Ensure an element's opening tag has the hidden attribute
+  function forceHidden(html, id) {
+    return html.replace(
+      new RegExp(`(id="${id}"[^>]*?)(?:\\s+hidden(?:="")?)?(\s*/?>)`),
+      (_, pre, gt) => pre + ' hidden' + gt
+    );
+  }
+
+  // Ensure an element's opening tag does not have the hidden attribute
+  function forceVisible(html, id) {
+    return html.replace(
+      new RegExp(`(id="${id}"[^>]*?)\\s+hidden(?:="")?(\s*/?>)`),
+      (_, pre, gt) => pre + gt
+    );
+  }
+
   function buildHtmlString(outerHtml, content) {
     const escaped = content.replace(/<\/script>/gi, '<\\/script>');
-    const updated = outerHtml.replace(
+    let html = outerHtml.replace(
       /(<script[^>]+id="md-content"[^>]*>)([\s\S]*?)(<\/script>)/,
       (_, open, _inner, close) => open + escaped + close
     );
-    return '<!DOCTYPE html>\n' + updated;
+    // Normalize ephemeral UI to initial state so saved file opens cleanly
+    html = forceHidden(html, 'status-bar');
+    html = forceHidden(html, 'btn-save');
+    html = forceHidden(html, 'edit-pane');
+    html = forceVisible(html, 'read-pane');
+    html = html.replace(
+      /(<button\b[^>]*\bid="btn-toggle-mode"[^>]*>)[^<]*(<\/button>)/,
+      (_, open, close) => open + 'Edit' + close
+    );
+    return '<!DOCTYPE html>\n' + html;
   }
 
   function downloadFile(content, filename, mimeType) {

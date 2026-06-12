@@ -45,3 +45,38 @@ test('buildHtmlString handles $ signs in content without corruption', () => {
   );
   expect(html).toContain('Price: $100 & $200');
 });
+
+test('buildHtmlString resets ephemeral UI to initial state', () => {
+  const dirty = `<html><body>
+    <div id="status-bar" role="status" aria-live="polite">unsaved</div>
+    <button id="btn-save">Save</button>
+    <main id="read-pane" hidden></main>
+    <div id="edit-pane"></div>
+    <button id="btn-toggle-mode">Read</button>
+    <script type="text/markdown" id="md-content"></script>
+  </body></html>`;
+  const html = FileOps.buildHtmlString(dirty, '# Test');
+  expect(html).toMatch(/id="status-bar"[^>]* hidden/);
+  expect(html).toMatch(/id="btn-save"[^>]* hidden/);
+  expect(html).toMatch(/id="edit-pane"[^>]* hidden/);
+  expect(html).not.toMatch(/id="read-pane"[^>]* hidden/);
+  expect(html).toContain('>Edit</button>');
+});
+
+test('buildHtmlString handles hidden="" attribute form from browser serialization', () => {
+  const dirty = `<html><body>
+    <div id="status-bar" role="status" aria-live="polite">unsaved</div>
+    <button id="btn-save">Save</button>
+    <main id="read-pane" hidden=""></main>
+    <div id="edit-pane" hidden=""></div>
+    <button id="btn-toggle-mode">Read</button>
+    <script type="text/markdown" id="md-content"></script>
+  </body></html>`;
+  const html = FileOps.buildHtmlString(dirty, '# Test');
+  // read-pane must be visible — hidden="" must be stripped
+  expect(html).not.toMatch(/id="read-pane"[^>]* hidden/);
+  // edit-pane must be hidden — hidden="" must be normalised to plain hidden
+  expect(html).toMatch(/id="edit-pane"[^>]* hidden/);
+  // no double-hidden artifacts
+  expect(html).not.toMatch(/hidden[^>]*hidden/);
+});
