@@ -39,6 +39,7 @@
       markDirty();
     } else {
       Storage.clearRecovery();
+      UI.setTextareaValue('');
       if (embedded) {
         loadContent(embedded, nameFromContent(embedded));
       } else {
@@ -51,11 +52,19 @@
   } else {
     UI.switchToEditMode();
     State.setMode('edit');
+    // Sync render with any browser-restored textarea value (session restore / bfcache)
+    const restoredValue = UI.getTextareaValue();
+    if (restoredValue) {
+      State.setContent(restoredValue);
+      UI.setEditRenderOutput(Markdown.renderMarkdown(restoredValue));
+      markDirty();
+    }
   }
 
   // Mode toggle
   document.getElementById('btn-toggle-mode').addEventListener('click', () => {
     if (State.getMode() === 'read') {
+      UI.setEditRenderOutput(Markdown.renderMarkdown(State.getContent()));
       UI.switchToEditMode();
       State.setMode('edit');
     } else {
