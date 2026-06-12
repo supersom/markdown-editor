@@ -35,3 +35,15 @@ A chronological record of design decisions and non-obvious insights. *Why*, not 
 **Tests / verification:** Pushed `df92c63`. CI run `27433434158`: `test-build` ran `17:57:01 → 17:57:43` (success), then `deploy` ran `17:57:47 → 17:58:01` (success). Deploy **started 4s after test-build finished** — it sat queued during the test job, confirming the `needs:` gate held rather than deploying in parallel. Post-deploy, `https://www.somdutta.com/markdown-editor/` returned HTTP 200. Only one workflow (`CI`) now triggers on push; the separate "Deploy to Pages" run is gone.
 
 **Concluding notes:** The tradeoff is latency-to-live — the deploy now waits ~1 min for the full test job (including the Playwright install/run) instead of deploying in parallel. That's correctness over speed, and intended: the whole point is that untested code can't reach production. The backlog's CI/CD section is now clear.
+
+## 2026-06-12 18:09 UTC — Rendered links open in a new tab
+
+**What:** Following a link in the read pane or edit-mode preview unloaded this single-page app, discarding unsaved edits and the open document. Content links now open in a new tab, so the editor/reader (and its unsaved state) is never lost.
+
+**How:** In `ui.js`, both render setters (`setRenderOutput`, `setEditRenderOutput`) now route through a shared `renderInto(id, html)` that, after assigning `innerHTML`, sets `target="_blank"` and `rel="noopener noreferrer"` on `a[href]:not([href^="#"])`. Same-page `#anchors` are excluded — they scroll in place and never navigate away, so they don't need a tab. `rel=noopener` stops the opened page reaching back through `window.opener`.
+
+**Why DOM, not the marked renderer:** marked's `renderer.link` signature changes across major versions (positional `href,title,text` vs a token object), so overriding it is upgrade-fragile. Setting attributes on the already-rendered DOM is version-proof and sits exactly where links are clicked. The self-contained "Save in this HTML" file re-renders from its embedded markdown on open, so it re-applies the behavior — saved files behave identically.
+
+**Tests / verification:** Added 3 jsdom unit tests (content link → target + rel; edit-preview link → target; `#anchor` left alone); suite is 58/58. Also a real-browser Playwright check: the rendered external link had `target=_blank rel=noopener noreferrer`, the hash link's target was `null`, and clicking the external link opened a new tab to `https://example.com/` while the original tab stayed on the editor. Pushed `2a62336`; CI run `27434050209` was green (`test-build` + gated `deploy`) and the live site redeployed.
+
+**Concluding notes:** Both the read pane and edit preview are covered through the single shared helper, so any future render path that goes through the setters inherits the behavior for free.
