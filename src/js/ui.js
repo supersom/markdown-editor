@@ -18,6 +18,9 @@ const UI = (() => {
     showStatusBar(visible) {
       document.getElementById('status-bar').hidden = !visible;
     },
+    showSaveButton(visible) {
+      document.getElementById('btn-save').hidden = !visible;
+    },
     setDocumentNameDisplay(name) {
       document.getElementById('doc-name').textContent = name;
     },

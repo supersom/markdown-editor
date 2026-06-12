@@ -18,12 +18,14 @@
   function markClean() {
     State.setDirty(false);
     UI.showStatusBar(false);
+    UI.showSaveButton(false);
     Storage.clearRecovery();
   }
 
   function markDirty() {
     State.setDirty(true);
     UI.showStatusBar(true);
+    UI.showSaveButton(true);
     Storage.autosave(State.getContent());
   }
 
@@ -112,7 +114,30 @@
     State.setFileHandle(result.handle);
     loadContent(result.content, result.name);
     markClean();
-    if (State.getMode() === 'read') { UI.switchToEditMode(); State.setMode('edit'); }
+    UI.switchToReadMode();
+    State.setMode('read');
+  });
+
+  // Save — in-place to opened .md if handle exists, otherwise save as HTML
+  document.getElementById('btn-save').addEventListener('click', async () => {
+    if (State.getFileHandle()) {
+      const result = await FileOps.saveAsMd(
+        State.getContent(),
+        State.getFileHandle(),
+        State.getDocumentName()
+      );
+      if (!result) return;
+      if (result.handle) {
+        State.setFileHandle(result.handle);
+        State.setDocumentName(result.name);
+        UI.setDocumentNameDisplay(result.name);
+        document.title = result.name + ' — Markdown Editor';
+      }
+      markClean();
+    } else {
+      const saved = await FileOps.saveAsHtml(State.getContent());
+      if (saved) markClean();
+    }
   });
 
   // Save in this HTML
@@ -121,11 +146,11 @@
     if (saved) markClean();
   });
 
-  // Save as separate document
+  // Save as separate document — always opens dialog, suggests current doc name
   document.getElementById('btn-save-md').addEventListener('click', async () => {
     const result = await FileOps.saveAsMd(
       State.getContent(),
-      State.getFileHandle(),
+      null,
       State.getDocumentName()
     );
     if (!result) return;

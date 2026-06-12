@@ -6,6 +6,7 @@ const DOM = `
     <div class="action-center">
       <span id="doc-name">Untitled</span>
       <button id="btn-save-html">Save in this HTML</button>
+      <button id="btn-save" hidden>Save</button>
       <button id="btn-save-md">Save as separate document</button>
     </div>
     <div class="action-right"><button id="btn-toggle-mode">Edit</button></div>
@@ -70,6 +71,15 @@ test('switchToReadMode shows read pane, hides edit pane', () => {
   expect(document.getElementById('read-pane').hidden).toBe(false);
   expect(document.getElementById('edit-pane').hidden).toBe(true);
   expect(document.getElementById('btn-toggle-mode').textContent).toBe('Edit');
+});
+test('showSaveButton true makes visible', () => {
+  UI.showSaveButton(true);
+  expect(document.getElementById('btn-save').hidden).toBe(false);
+});
+test('showSaveButton false hides', () => {
+  document.getElementById('btn-save').hidden = false;
+  UI.showSaveButton(false);
+  expect(document.getElementById('btn-save').hidden).toBe(true);
 });
 test('showRecoveryPrompt returns true when confirmed', () => {
   window.confirm = jest.fn(() => true);
