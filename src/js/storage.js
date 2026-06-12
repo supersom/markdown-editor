@@ -11,7 +11,7 @@ const Storage = (() => {
       localStorage.setItem(KEY, content);
     },
     getRecovery() { return localStorage.getItem(KEY); },
-    clearRecovery() { localStorage.removeItem(KEY); },
+    clearRecovery() { clearTimeout(_timer); _timer = null; localStorage.removeItem(KEY); },
     hasRecovery() { return localStorage.getItem(KEY) !== null; },
   };
 })();

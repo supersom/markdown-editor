@@ -14,6 +14,14 @@ test('clearRecovery removes stored content', () => {
   Storage.clearRecovery();
   expect(Storage.getRecovery()).toBeNull();
 });
+test('clearRecovery cancels pending debounced autosave', () => {
+  jest.useFakeTimers();
+  Storage.autosave('draft content');
+  Storage.clearRecovery();
+  jest.runAllTimers();
+  expect(Storage.getRecovery()).toBeNull();
+  jest.useRealTimers();
+});
 test('hasRecovery false when empty', () => {
   expect(Storage.hasRecovery()).toBe(false);
 });
