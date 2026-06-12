@@ -1,6 +1,8 @@
 # Markdown Editor
 
-A single-file markdown editor and renderer. Open `dist/markdown-editor.html` in any browser — no install, no server, no account required.
+A single-file markdown editor and renderer — no install, no server, no account required.
+
+**Use it:** open the live app at <https://supersom.github.io/markdown-editor/> (always the latest build from `main`), or download a standalone `markdown-editor.html` from the [Releases](https://github.com/supersom/markdown-editor/releases) page and open it in any browser. The downloaded file is fully self-contained, so the "Save in this HTML" workflow keeps working offline.
 
 ## What it does
 
@@ -37,6 +39,8 @@ node build.js
 ```
 
 The build script inlines `marked.js` (markdown parser), all CSS, and all app JS into a single HTML file.
+
+`dist/` is git-ignored — the bundle is a build artifact, not source. CI builds it on every push; pushes to `main` deploy it to GitHub Pages, and tagging `v*` attaches it to a GitHub Release.
 
 ## Test
 
