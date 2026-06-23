@@ -59,3 +59,15 @@ A chronological record of design decisions and non-obvious insights. *Why*, not 
 **Tests / verification:** Reproduced with Playwright real-keyboard typing (the previous scripted `scrollTop` repro was the thing that hid the bug): `line 30` was hidden before, fully visible after (before/after screenshots). Rewrote the e2e guard from a padding assertion to a geometric **no-overlap** invariant — `edit-pane`/`read-pane` bottom ≤ `status-bar` top — including a narrow-viewport (360px) case where the banner wraps to two lines. All 3 pass on the fix and **all 3 fail on the restored overlay CSS**. jest 58/58. Pushed `51d6631`; CI run `27434959578` green (`test-build` + gated `deploy`); site redeployed.
 
 **Concluding notes:** Tradeoff is a one-time layout shift when the banner first appears (content shrinks by its height) — acceptable, arguably useful feedback. Lesson for next time: padding can't substitute for layout when a fixed overlay sits over a scrollable/editable region, and interactive bugs must be verified with real input (typing), not a scrolled-to-bottom snapshot that happens to reveal reserved space.
+
+## Bugs caught during code review
+
+These were found by the spec and quality review passes during development — worth keeping for context:
+
+| Bug | Where | Fix |
+|---|---|---|
+| `$` in markdown content silently corrupted the saved HTML | `file-ops.js: buildHtmlString` | Switched from string replacement to a replacer function to bypass `$`-escape interpretation |
+| Dragging the pane divider past 20%/80% bounds froze the pane width | `ui.js: initDivider` | Changed `if (pct > 20 && pct < 80)` to `Math.max(20, Math.min(80, pct))` applied unconditionally |
+| Textarea wouldn't fill its container in flex column on some browsers | `style.css: #editor-left` | Added `min-height: 0` |
+| Last paragraph in read mode hidden behind fixed status bar | `style.css: #read-pane` | Added `padding-bottom: calc(var(--status-bar-h) + 24px)` |
+| `reset()` in state module not tested as a round-trip | `state.js` + `state.test.js` | Added mutation-then-reset test; now 13 state tests |
