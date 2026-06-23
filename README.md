@@ -62,15 +62,3 @@ Source is split into focused modules concatenated by `build.js`:
 | `src/js/file-ops.js` | All file I/O — FSA open/save and download fallbacks |
 | `src/js/ui.js` | All DOM reads/writes and mode switching |
 | `src/js/main.js` | App init and event wiring |
-
-## Bugs caught during code review
-
-These were found by the spec and quality review passes during development — worth keeping for context:
-
-| Bug | Where | Fix |
-|---|---|---|
-| `$` in markdown content silently corrupted the saved HTML | `file-ops.js: buildHtmlString` | Switched from string replacement to a replacer function to bypass `$`-escape interpretation |
-| Dragging the pane divider past 20%/80% bounds froze the pane width | `ui.js: initDivider` | Changed `if (pct > 20 && pct < 80)` to `Math.max(20, Math.min(80, pct))` applied unconditionally |
-| Textarea wouldn't fill its container in flex column on some browsers | `style.css: #editor-left` | Added `min-height: 0` |
-| Last paragraph in read mode hidden behind fixed status bar | `style.css: #read-pane` | Added `padding-bottom: calc(var(--status-bar-h) + 24px)` |
-| `reset()` in state module not tested as a round-trip | `state.js` + `state.test.js` | Added mutation-then-reset test; now 13 state tests |
